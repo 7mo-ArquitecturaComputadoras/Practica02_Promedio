@@ -150,20 +150,30 @@ El flujo general del programa es el siguiente:
                               minimum width=4cm, minimum height=0.8cm, font=\small},
             arr/.style      ={-Stealth, thick, gray!80}
         ]
+            % --- Nodos del Bucle (Columna Central) ---
             \node[startstop] (inicio)  {Inicio: ESI $\leftarrow$ \texttt{Dato},\ ECX $\leftarrow$ \texttt{Cantidad},\ EAX $\leftarrow$ 0};
             \node[decision,  below=0.8cm of inicio]  (loop)   {ECX $> 0$?};
-            \node[process,   right=2.2cm of loop]    (suma)   {EAX $\leftarrow$ EAX $+$ [ESI]};
+            \node[process,   below=0.8cm of loop]    (suma)   {EAX $\leftarrow$ EAX $+$ [ESI]};
             \node[process,   below=0.8cm of suma]    (avanza) {ESI $\leftarrow$ ESI $+$ 4,\ ECX$--$};
-            \node[process,   below=0.8cm of loop]    (cdq)    {CDQ: extiende signo EAX $\to$ EDX:EAX};
+
+            % --- Nodos de Salida (Columna Derecha) ---
+            \node[process,   right=2.2cm of loop]    (cdq)    {CDQ: extiende signo EAX $\to$ EDX:EAX};
             \node[process,   below=0.8cm of cdq]     (div)    {IDIV \texttt{Cantidad}: EAX $\leftarrow$ cociente,\ EDX $\leftarrow$ resto};
             \node[result,    below=0.8cm of div]     (guarda) {\texttt{Promedio} $\leftarrow$ EAX,\ \texttt{Residuo} $\leftarrow$ EDX};
             \node[startstop, below=0.8cm of guarda]  (fin)    {Fin: ExitProcess(0)};
 
+            % --- Enlaces ---
             \draw[arr] (inicio)  -- (loop);
-            \draw[arr] (loop)    -- node[above, font=\scriptsize]{Sí} (suma);
+            
+            % Interior del bucle principal
+            \draw[arr] (loop)    -- node[right, font=\scriptsize]{Sí} (suma);
             \draw[arr] (suma)    -- (avanza);
-            \draw[arr] (avanza.west) -- ++(-0.5,0) |- (loop.east);
-            \draw[arr] (loop)    -- node[right, font=\scriptsize]{No} (cdq);
+            
+            % Retorno del bucle (viaja por el margen izquierdo vacío)
+            \draw[arr] (avanza.west) -- ++(-1.0,0) |- (loop.west);
+            
+            % Salida del bucle y post-procesamiento
+            \draw[arr] (loop)    -- node[above, font=\scriptsize]{No} (cdq);
             \draw[arr] (cdq)     -- (div);
             \draw[arr] (div)     -- (guarda);
             \draw[arr] (guarda)  -- (fin);
