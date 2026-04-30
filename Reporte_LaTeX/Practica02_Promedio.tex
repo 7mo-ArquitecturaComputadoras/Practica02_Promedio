@@ -7,7 +7,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[english]{babel}
+\usepackage[spanish]{babel}
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{listings}
@@ -15,6 +15,7 @@
 \usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{hyperref}
+\usepackage{xurl}
 \usepackage{fancyhdr}
 \usepackage{float}
 \usepackage{caption}
@@ -33,8 +34,7 @@
     morekeywords={PROC,ENDP,END,PUSH,POP,MOV,ADD,SUB,CALL,RET,JMP,
                   JE,JB,JA,INC,CMP,EXTERN,BYTE,DWORD,SDWORD,QWORD,PTR,
                   EBP,ESP,ESI,EAX,EBX,ECX,EDX,AL,LEA,XOR,CDQ,IDIV,LOOP,
-                  EQU,.586,.model,.data,.code,flat,stdcall,offset,option,
-                  casemap,none,include,includelib,start},
+                  EQU,.586,.model,.data,.code,flat,stdcall,offset,start},
     sensitive=false,
     morecomment=[l]{;}
 }
@@ -49,8 +49,8 @@
     breaklines=true, captionpos=b, tabsize=4,
     showstringspaces=false,
     literate=
-        {á}{{\\'a}}1 {é}{{\\'e}}1 {í}{{\\'i}}1 {ó}{{\\'o}}1 {ú}{{\\'u}}1
-        {Á}{{\\'A}}1 {É}{{\\'E}}1 {Í}{{\\'I}}1 {Ó}{{\\'O}}1 {Ú}{{\\'U}}1
+        {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+        {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
         {ñ}{{\~n}}1 {Ñ}{{\~N}}1
 }
 
@@ -104,7 +104,7 @@ Las computadoras representan números negativos utilizando el sistema de \textbf
 
 \subsection*{¿Por qué se necesita CDQ antes de dividir?}
 
-La instrucción \texttt{IDIV} (división entera con signo) espera un dividendo de \textbf{64 bits} repartido entre dos registros: \texttt{EDX} (32 bits altos) y \texttt{EAX} (32 bits bajos). Si la suma está en \texttt{EAX} y se divide directamente, \texttt{EDX} puede contener basura y producir resultados incorrectos. La instrucción \texttt{CDQ} (\textit{Convert Double to Quad}) extiende el bit de signo de \texttt{EAX} hacia todo \texttt{EDX}, construyendo correctamente ese número de 64 bits:
+La instrucción \texttt{IDIV} (división entera con signo) espera un dividendo de \textbf{64 bits} repartido entre dos registros: \texttt{EDX} (32 bits altos) y \texttt{EAX} (32 bits bajos). Si la suma está en \texttt{EAX} y se divide directamente, \texttt{EDX} puede contener basura y producir resultados incorrectos o provocar una excepción de overflow. La instrucción \texttt{CDQ} (\textit{Convert Double to Quad}) extiende el bit de signo de \texttt{EAX} hacia todo \texttt{EDX}, construyendo correctamente ese número de 64 bits:
 
 \begin{equation}
     \text{EDX:EAX} \xrightarrow{\texttt{IDIV}\ n} \quad \text{EAX} = \left\lfloor \frac{\text{suma}}{n} \right\rfloor, \quad \text{EDX} = \text{suma} \bmod n
@@ -164,14 +164,14 @@ El flujo general del programa es el siguiente:
 
             % --- Enlaces ---
             \draw[arr] (inicio)  -- (loop);
-            
+
             % Interior del bucle principal
             \draw[arr] (loop)    -- node[right, font=\scriptsize]{Sí} (suma);
             \draw[arr] (suma)    -- (avanza);
-            
-            % Retorno del bucle (viaja por el margen izquierdo vacío)
+
+            % Retorno del bucle (viaja por el margen izquierdo)
             \draw[arr] (avanza.west) -- ++(-1.0,0) |- (loop.west);
-            
+
             % Salida del bucle y post-procesamiento
             \draw[arr] (loop)    -- node[above, font=\scriptsize]{No} (cdq);
             \draw[arr] (cdq)     -- (div);
@@ -201,10 +201,6 @@ A continuación se presenta el programa completo:
 \begin{lstlisting}[language=MASM, caption={promedio.asm --- Promedio de enteros con signo}]
 .586
 .model flat, stdcall
-option casemap:none
-
-include \masm32\include\kernel32.inc
-includelib \masm32\lib\kernel32.lib
 
 .data
     Dato      SDWORD  -10, 20, -30, 40, -50, 60
@@ -214,18 +210,19 @@ includelib \masm32\lib\kernel32.lib
     Residuo   SDWORD ?
 
 .code
+EXTERN ExitProcess@4 : PROC
+
 start:
     lea esi, Dato       ; Carga la direccion de memoria inicial del arreglo en ESI
     mov ecx, Cantidad   ; Inicializa el contador del bucle con el numero de elementos
     xor eax, eax        ; Limpia EAX (lo pone en 0) para usarlo como acumulador
 
-sumar_loop:
+sumar:
     add eax, [esi]      ; Suma el valor apuntado por ESI al acumulador EAX
     add esi, 4          ; Mueve el puntero ESI al siguiente elemento (4 bytes adelante)
-    loop sumar_loop     ; Decrementa ECX y salta si ECX > 0
+    loop sumar          ; Decrementa ECX y salta a sumar si ECX > 0
 
     cdq                 ; Extiende el signo de EAX hacia EDX (crea EDX:EAX de 64 bits)
-
     mov ebx, Cantidad   ; Carga el divisor (n=6) en EBX
     idiv ebx            ; Divide EDX:EAX entre EBX. Cociente en EAX, Resto en EDX
 
@@ -233,7 +230,7 @@ sumar_loop:
     mov Residuo, edx    ; Guarda el residuo de la division
 
     push 0
-    call ExitProcess
+    call ExitProcess@4
 end start
 \end{lstlisting}
 
@@ -307,7 +304,7 @@ El arreglo declarado en \texttt{.data} es:
         6 & $+60$ & $+30$ & 0 \\
         \bottomrule
     \end{tabular}
-    \caption{Evolución del acumulador durante el ciclo \texttt{sumar\_loop}}
+    \caption{Evolución del acumulador durante el ciclo \texttt{sumar}}
 \end{table}
 
 \begin{figure}[H]
@@ -316,7 +313,6 @@ El arreglo declarado en \texttt{.data} es:
     \caption{Ventana de memoria: \texttt{Promedio = 0x05}, \texttt{Residuo = 0x00} escritos en \texttt{.data}}
     \label{fig:memoria_resultado}
 \end{figure}
-
 
 \begin{table}[H]
     \centering
@@ -334,14 +330,14 @@ El arreglo declarado en \texttt{.data} es:
 % ============================================================
 \section{Repositorio GitHub}
 
-https://github.com/7mo-ArquitecturaComputadoras/Practica02\_Promedio
+\url{https://github.com/7mo-ArquitecturaComputadoras/Practica02_Promedio}
 
 % ============================================================
 \section{Conclusiones}
 
 \begin{itemize}
     \item El programa demuestra que \textbf{el procesador no distingue intrínsecamente entre suma y promedio}: el promedio no es más que una suma seguida de una división, y ambas operaciones se realizan directamente sobre registros.
-    \item La instrucción \texttt{CDQ} es indispensable antes de \texttt{IDIV}: sin ella, \texttt{EDX} contendría valores arbitrarios y el resultado de la división sería incorrecto, especialmente con sumas negativas.
+    \item La instrucción \texttt{CDQ} es indispensable antes de \texttt{IDIV}: sin ella, \texttt{EDX} contendría valores arbitrarios y el resultado de la división sería incorrecto o provocaría una excepción, especialmente con sumas negativas.
     \item La directiva \texttt{EQU} con la expresión \texttt{(\$ - Dato) / 4} es un patrón idiomático en MASM para calcular el tamaño de un arreglo \textbf{en tiempo de ensamblado}, eliminando la posibilidad de errores al modificar la lista de datos.
     \item El uso de \texttt{LOOP} con \texttt{ECX} como contador ilustra cómo el hardware ofrece soporte nativo para estructuras de control como los ciclos \texttt{for} de los lenguajes de alto nivel.
     \item Esta práctica evidencia la cadena completa de operaciones que ejecuta un procesador cuando un lenguaje como Python o Java invoca \texttt{statistics.mean()}: en el fondo, el hardware realiza exactamente esta misma secuencia de sumas, extensión de signo y división con signo.

@@ -30,7 +30,7 @@ Practica02_Promedio/
 
 ## Interfaz y Convención de Llamada
 
-El programa es autocontenido: declara el arreglo y las variables de resultado en la sección `.data` y los procesa directamente en `start`. Utiliza las bibliotecas de MASM32 para la llamada de salida.
+El programa es autocontenido: declara el arreglo y las variables de resultado en la sección `.data` y los procesa directamente en `start`. Al finalizar, invoca `ExitProcess@4` de la WinAPI para cerrar el proceso limpiamente.
 
 | Elemento    | Descripción                                                              |
 |-------------|--------------------------------------------------------------------------|
@@ -44,7 +44,7 @@ El programa es autocontenido: declara el arreglo y las variables de resultado en
 | `EDX`       | Recibe la extensión de signo vía `CDQ`; contiene el resto tras `IDIV`    |
 | `EBX`       | Almacena el divisor (`Cantidad`) para la instrucción `IDIV`              |
 
-La directiva `.model flat, stdcall` indica modelo de memoria plana con la convención de llamadas estándar de Windows. Al finalizar, se invoca `ExitProcess` para cerrar el proceso limpiamente.
+La directiva `.model flat, stdcall` indica modelo de memoria plana con la convención de llamadas estándar de Windows.
 
 ---
 
@@ -60,18 +60,18 @@ Inicio
  └─ ECX = Cantidad
  └─ EAX = 0
 
-sumar_loop:
+sumar:
  ├─ EAX += [ESI]
  ├─ ESI += 4
- └─ LOOP sumar_loop   (ECX--; si ECX > 0, repetir)
+ └─ LOOP sumar        (ECX--; si ECX > 0, repetir)
 
  ├─ CDQ               →  EDX:EAX = extensión de signo de EAX
- ├─ IDIV Cantidad     →  EAX = cociente, EDX = resto
+ ├─ IDIV EBX          →  EAX = cociente, EDX = resto
  ├─ Promedio = EAX
  └─ Residuo  = EDX
 
 finalizar:
- └─ ExitProcess(0)
+ └─ ExitProcess@4(0)
 ```
 
 ### Ejemplo con el arreglo `{-10, 20, -30, 40, -50, 60}`
@@ -123,7 +123,7 @@ Residuo            : 0
 
 ## Requisitos
 
-- **Ensamblador:** MASM (Microsoft Macro Assembler) con MASM32 SDK
+- **Ensamblador:** MASM (Microsoft Macro Assembler), incluido en Visual Studio
 - **Arquitectura:** x86 (32 bits), modo protegido plano (`flat`)
-- **Sistema operativo:** Windows (uso de `ExitProcess` de la WinAPI)
+- **Sistema operativo:** Windows (uso de `ExitProcess@4` de la WinAPI)
 - **Convención de llamadas:** `stdcall`
