@@ -24,7 +24,7 @@ Guía paso a paso para clonar, compilar y ejecutar la **Práctica 02 — Promedi
 Antes de empezar, conviene entender qué hace cada programa:
 
 - **Git**: Sistema de control de versiones. Sirve para descargar (clonar) el repositorio a tu computadora.
-- **Visual Studio**: Entorno integrado de desarrollo (IDE) de Microsoft. Incluye el compilador, el linker y, lo más importante para esta práctica, **MASM** (`ml.exe`), el ensamblador que traduce `conversion.asm` a un ejecutable.
+- **Visual Studio**: Entorno integrado de desarrollo (IDE) de Microsoft. Incluye el compilador, el linker y, lo más importante para esta práctica, **MASM** (`ml.exe`), el ensamblador que traduce `promedio.asm` a un ejecutable.
 - **MASM** (*Microsoft Macro Assembler*): No se instala por separado, viene incluido dentro de la carga de trabajo *Desktop development with C++* de Visual Studio.
 
 > 💡 No se requiere ningún compilador externo ni librerías adicionales. Todo lo que necesitas está dentro de Visual Studio.
@@ -89,9 +89,9 @@ git clone git@github.com:7mo-ArquitecturaComputadoras/Practica02_Promedio.git
 
 1. Entra a la carpeta `proyecto/` dentro del repositorio.
 2. Haz doble clic sobre **`Practica02_Promedio.sln`**.
-3. Visual Studio se abrirá y cargará automáticamente el proyecto, incluido el archivo `src/conversion.asm`.
+3. Visual Studio se abrirá y cargará automáticamente el proyecto, incluido el archivo `src/promedio.asm`.
 
-> 💡 El archivo `.slnx` es la versión moderna de los `.sln` clásicos. Si tu versión de Visual Studio no lo reconoce, abre directamente el `.vcxproj`.
+> 💡 El archivo `.sln` es el formato clásico de soluciones de Visual Studio. Si quieres convertirlo al formato moderno `.slnx`, abre la solución en Visual Studio 2022 17.10+ y guárdala como `.slnx`. Si tu versión es anterior, abre directamente el `.vcxproj`.
 
 ---
 
@@ -132,13 +132,13 @@ El ejecutable se generará en `proyecto/Debug/Practica02_Promedio.exe`.
 
 ## 7️⃣ Ejecutar y observar el resultado
 
-El programa **no imprime nada en pantalla**: modifica silenciosamente la cadena en memoria. Para ver el resultado tienes que inspeccionar la memoria con el depurador.
+El programa **no imprime nada en pantalla**: calcula el promedio y el residuo, almacenándolos en las variables `Promedio` y `Residuo` de memoria. Para ver el resultado tienes que inspeccionar estas variables con el depurador.
 
-1. Abre `proyecto/src/conversion.asm` en el editor de Visual Studio.
+1. Abre `proyecto/src/promedio.asm` en el editor de Visual Studio.
 2. Coloca un *breakpoint* (punto de interrupción) haciendo clic en el margen izquierdo, justo en la línea de la etiqueta:
 
    ```asm
-   fin:
+   finalizar:
        push 0
        call ExitProcess@4
    ```
@@ -148,12 +148,14 @@ El programa **no imprime nada en pantalla**: modifica silenciosamente la cadena 
 5. En la barra de **Dirección** de la ventana de memoria, escribe:
 
    ```
-   &cad
+   &Promedio
    ```
 
-6. Verás los bytes de la cadena en memoria. Donde antes decía `"Hola Mundo"` ahora debe decir `"HOLA MUNDO"` (seguido de un byte `00` que marca el final).
+6. Verás los 4 bytes del valor `Promedio` en memoria. Para el arreglo de ejemplo `{-10, 20, -30, 40, -50, 60}`, debería mostrar `05 00 00 00` (que representa el número `5` en formato SDWORD de 32 bits little-endian).
 
-> 💡 También puedes pasar el ratón sobre `cad` en el código mientras el depurador está pausado; aparecerá una pequeña ventana con los valores actuales.
+7. Reemplaza `&Promedio` por `&Residuo` en la barra de dirección para ver el residuo (debería ser `00 00 00 00`, es decir, cero).
+
+> 💡 También puedes pasar el ratón sobre `Promedio` o `Residuo` en el código mientras el depurador está pausado; aparecerá una pequeña ventana con los valores decimales actuales.
 
 ---
 
@@ -162,10 +164,10 @@ El programa **no imprime nada en pantalla**: modifica silenciosamente la cadena 
 | Síntoma | Causa probable | Solución |
 |---|---|---|
 | `error A2006: undefined symbol : ExitProcess` | Configuración en **x64** con código de 32 bits | Cambia la plataforma a **Win32** en la barra superior |
-| `error MSB6006: "ml.exe" exited with code 1` | Ruta del archivo `.asm` rota | Verifica que `proyecto/src/conversion.asm` exista |
+| `error MSB6006: "ml.exe" exited with code 1` | Ruta del archivo `.asm` rota | Verifica que `proyecto/src/promedio.asm` exista |
 | **masm(.targets, .props)** no aparece en *Personalizaciones de compilación* | Falta la carga de trabajo *Desarrollo C++* | Abre **Visual Studio Installer**, pulsa **"Modificar"** y agrégala |
 | `git` no se reconoce como comando | Git no se instaló o no se agregó al PATH | Reinstala Git marcando *"Git from the command line and also from 3rd-party software"* |
-| El `.slnx` no abre | Versión de Visual Studio anterior a 2022 17.10 | Abre directamente `Practica02_Promedio.vcxproj` |
+| El `.sln` no abre | Versión de Visual Studio anterior a 2022 17.10 | Abre directamente `Practica02_Promedio.vcxproj` |
 
 ---
 
