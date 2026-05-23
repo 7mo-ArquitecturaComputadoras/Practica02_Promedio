@@ -167,7 +167,7 @@ El programa **no imprime nada en pantalla**: calcula el promedio y el residuo, a
 | `error MSB6006: "ml.exe" exited with code 1` | Ruta del archivo `.asm` rota | Verifica que `proyecto/src/promedio.asm` exista |
 | **masm(.targets, .props)** no aparece en *Personalizaciones de compilación* | Falta la carga de trabajo *Desarrollo C++* | Abre **Visual Studio Installer**, pulsa **"Modificar"** y agrégala |
 | `git` no se reconoce como comando | Git no se instaló o no se agregó al PATH | Reinstala Git marcando *"Git from the command line and also from 3rd-party software"* |
-| El `.sln` no abre | Versión de Visual Studio anterior a 2022 17.10 | Abre directamente `Practica02_Promedio.vcxproj` |
+| El `.slnx` no abre | Versión de Visual Studio anterior a 2022 17.10 | Abre directamente `Practica02_Promedio.vcxproj` |
 
 ---
 
