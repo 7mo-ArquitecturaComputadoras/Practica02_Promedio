@@ -73,6 +73,7 @@ fin:
 Practica02_Promedio/
 ├── documentacion/
 │   ├── README_compilacion_latex.md         # Cómo compilar el .tex a PDF
+│   ├── reporte.pdf                         # Reporte ya compilado
 │   ├── reporte.tex                         # Reporte técnico en LaTeX
 │   └── imagenes/                           # Imágenes usadas en el reporte
 │       ├── registros_inicio.png
