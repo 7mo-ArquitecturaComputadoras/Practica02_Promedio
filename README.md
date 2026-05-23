@@ -76,12 +76,10 @@ Practica02_Promedio/
 │   ├── reporte.pdf                         # Reporte ya compilado
 │   ├── reporte.tex                         # Reporte técnico en LaTeX
 │   └── imagenes/                           # Imágenes usadas en el reporte
-│       ├── registros_inicio.png
-│       └── memoria_resultado.png
 │
 ├── proyecto/
 │   ├── README_instalacion.md               # Guía de instalación y puesta en marcha
-│   ├── Practica02_Promedio.sln             # Solución de Visual Studio
+│   ├── Practica02_Promedio.slnx            # Solución de Visual Studio
 │   ├── Practica02_Promedio.vcxproj         # Proyecto MSBuild + MASM
 │   └── src/
 │       └── promedio.asm                    # Código fuente principal (MASM x86)
@@ -101,7 +99,11 @@ La guía detallada con todos los pasos (instalar Git, Visual Studio, habilitar M
 
 Resumen rápido para quien ya tiene el entorno listo:
 
-1. `git clone <url-del-repositorio>`
+1. Abre el **Símbolo del sistema** (`cmd`) o **Git Bash**, ubícate en la carpeta donde quieras guardar el proyecto y ejecuta:
+
+```bash
+git clone git@github.com:7mo-ArquitecturaComputadoras/Practica02_Promedio.git
+```
 2. Abrir `proyecto/Practica02_Promedio.sln` en Visual Studio.
 3. Seleccionar configuración **Debug | Win32**.
 4. Compilar con `Ctrl + Shift + B` y ejecutar con `F5`.

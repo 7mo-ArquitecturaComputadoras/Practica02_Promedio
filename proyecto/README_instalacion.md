@@ -88,10 +88,10 @@ git clone git@github.com:7mo-ArquitecturaComputadoras/Practica02_Promedio.git
 ## 4️⃣ Abrir la solución en Visual Studio
 
 1. Entra a la carpeta `proyecto/` dentro del repositorio.
-2. Haz doble clic sobre **`Practica02_Promedio.sln`**.
+2. Haz doble clic sobre **`Practica02_Promedio.slnx`**.
 3. Visual Studio se abrirá y cargará automáticamente el proyecto, incluido el archivo `src/promedio.asm`.
 
-> 💡 El archivo `.sln` es el formato clásico de soluciones de Visual Studio. Si quieres convertirlo al formato moderno `.slnx`, abre la solución en Visual Studio 2022 17.10+ y guárdala como `.slnx`. Si tu versión es anterior, abre directamente el `.vcxproj`.
+> 💡 El archivo `.slnx` es la versión moderna de los `.sln` clásicos. Si tu versión de Visual Studio no lo reconoce, abre directamente el `.vcxproj`.
 
 ---
 
