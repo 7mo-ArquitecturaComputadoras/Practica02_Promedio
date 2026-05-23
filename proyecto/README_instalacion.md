@@ -24,7 +24,7 @@ Guía paso a paso para clonar, compilar y ejecutar la **Práctica 02 — Promedi
 Antes de empezar, conviene entender qué hace cada programa:
 
 - **Git**: Sistema de control de versiones. Sirve para descargar (clonar) el repositorio a tu computadora.
-- **Visual Studio**: Entorno integrado de desarrollo (IDE) de Microsoft. Incluye el compilador, el linker y, lo más importante para esta práctica, **MASM** (`ml.exe`), el ensamblador que traduce `conversion.asm` a un ejecutable.
+- **Visual Studio**: Entorno integrado de desarrollo (IDE) de Microsoft. Incluye el compilador, el linker y, lo más importante para esta práctica, **MASM** (`ml.exe`), el ensamblador que traduce `promedio.asm` a un ejecutable.
 - **MASM** (*Microsoft Macro Assembler*): No se instala por separado, viene incluido dentro de la carga de trabajo *Desktop development with C++* de Visual Studio.
 
 > 💡 No se requiere ningún compilador externo ni librerías adicionales. Todo lo que necesitas está dentro de Visual Studio.
