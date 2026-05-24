@@ -1,4 +1,4 @@
-# 🔤 Práctica 02 — Promedio de Números Enteros con Signo en Ensamblador x86
+# 🔢 Práctica 02 — Promedio de Números Enteros con Signo en Ensamblador x86
 
 Programa escrito en **ensamblador x86 (MASM)** que recorre un arreglo de números enteros con signo almacenado en memoria, acumula su suma y calcula el **promedio aritmético** mediante división entera con signo, operando directamente sobre los registros del procesador, sin usar funciones externas de C/C++.
 
