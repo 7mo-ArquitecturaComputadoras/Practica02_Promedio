@@ -155,7 +155,7 @@ Resultado final en memoria: **`Promedio = 5`, `Residuo = 0`**.
 |---|---|
 | 🛠️ [`README_instalacion.md`](proyecto/README_instalacion.md) | Cómo instalar Git, Visual Studio con MASM, compilar y ejecutar el programa paso a paso. |
 | 📄 [`README_compilacion_latex.md`](documentacion/README_compilacion_latex.md) | Cómo regenerar el PDF del reporte a partir de `reporte.tex` usando TeX Live, Geany o VS Code, tanto en Linux como en Windows. |
-| 📕 [`reporte.pdf`](documentacion/reporte.pdf) | Reporte técnico ya compilado. |
+| 📕 [`reporte.pdf`](documentacion/reporte.pdf) | Reporte técnico ya compilado, con análisis detallado del algoritmo y capturas de registros. |
 | 📝 [`reporte.tex`](documentacion/reporte.tex) | Fuente LaTeX del reporte técnico. |
 
 ---
